@@ -5,10 +5,118 @@
 //  Created by Brendan Keane on 2021-05-07.
 //
 
+
 import SwiftUI
 import CoreImage
 import CoreImage.CIFilterBuiltins
 
+struct ContentView: View {
+    @State private var image: Image?
+    @State private var filterIntensity = 0.5
+    
+    @State private var inputImage: UIImage?
+    @State private var showingImagePicker = false
+    
+    @State private var currentFilter = CIFilter.sepiaTone()
+    let context = CIContext()
+    
+    var body: some View {
+        let intensity = Binding<Double>(
+            get: {
+                self.filterIntensity
+            },
+            set: {
+                self.filterIntensity = $0
+                self.applyProcessing()
+            }
+        )
+        return NavigationView {
+            VStack {
+                ZStack {
+                    Rectangle()
+                        .fill(Color.secondary)
+                    // display the image
+                    if image != nil {
+                        image?
+                            .resizable()
+                            .scaledToFit()
+                    } else {
+                        Text("Tap to select a picture")
+                            .foregroundColor(.white)
+                            .font(.headline)
+                    }
+                }
+                .onTapGesture {
+                    // select an image
+                    self.showingImagePicker = true
+                }
+                
+                HStack {
+                    Text("Intensity")
+                    Slider(value: intensity)
+                }.padding(.vertical)
+                
+                HStack {
+                    Button("Change Filter") {
+                        //change filter
+                    }
+                    
+                    Spacer()
+                    
+                    Button("Save") {
+                        // save the picture
+                    }
+                }
+            }
+            .padding([.horizontal, .bottom])
+            .navigationBarTitle("Instafilter")
+            .sheet(isPresented: $showingImagePicker, onDismiss: loadImage) {
+                ImagePicker(image: self.$inputImage)
+            }
+        }
+    }
+    func applyingProcessing() {
+        currentFilter.intensity = Float(filterIntensity)
+        
+        guard let outputImage = currentFilter.outputImage else { return }
+        
+        if let cgimg = context.createCGImage(outputImage, from: outputImage.extent) {
+            let uiImage = UIImage(cgImage: cgimg)
+            image = Image(uiImage: uiImage)
+        }
+    }
+    func loadImage() {
+        guard let inputImage = inputImage else { return }
+        
+        let beginImage = CIImage(image: inputImage)
+        currentFilter.setValue(beginImage, forKey: kCIInputImageKey)
+        applyProcessing()
+    }
+    func applyProcessing() {
+        currentFilter.intensity = Float(filterIntensity)
+        
+        guard let outputImage = currentFilter.outputImage else { return }
+        
+        if let cgimg = context.createCGImage(outputImage, from: outputImage.extent) {
+            let uiImage = UIImage(cgImage: cgimg)
+            image = Image(uiImage: uiImage)
+        }
+    }
+}
+
+/*
+import SwiftUI
+import CoreImage
+import CoreImage.CIFilterBuiltins
+
+/*
+ COMPLET PROCESSS FOR INTERACTING WITH UIKIT
+ We created a SwiftUI view that conforms to UIViewControllerRepresentable.
+ We gave it a makeUIViewController() method that created some sort of UIViewController, which in our example was a UIImagePickerController.
+ We added a nested Coordinator class to act as a bridge between the UIKit view controller and our SwiftUI view.
+ We gave that coordinator a didFinishPickingMediaWithInfo method, which will be triggered by UIKit when an image was selected.
+ Finally, we gave our ImagePicker an @Binding property so that it can send changes back to a parent view.
+*/
 
 struct ContentView: View {
     @State private var blurAmount: CGFloat = 0
@@ -16,6 +124,7 @@ struct ContentView: View {
     @State private var showingActionSheet = false
     @State private var backgroundColor = Color.white
     @State private var image: Image?
+    @State private var inputImage: UIImage?
     @State private var showingImagePicker = false
     
     var body: some View {
@@ -27,11 +136,20 @@ struct ContentView: View {
                 self.showingImagePicker = true
             }
         }
-        .sheet(isPresented: $showingImagePicker) {
-            ImagePicker()
+        .sheet(isPresented: $showingImagePicker, onDismiss: loadImage) {
+            ImagePicker(image: self.$inputImage)
         }
         //.onAppear(perform: loadImage)
     }
+    func loadImage() {
+        guard let inputImage = inputImage else { return }
+        image = Image(uiImage: inputImage)
+        //UIImageWriteToSavedPhotosAlbum(inputImage, nil, nil, nil)
+        let imageSaver = ImageSaver()
+        imageSaver.writeToPhotoAlbum(image: inputImage)
+
+    }
+    /*
     func loadImage() {
         guard let inputImage = UIImage(named: "bjj") else { return }
         let beginImage = CIImage(image: inputImage)
@@ -76,6 +194,7 @@ struct ContentView: View {
         
         //image = Image("bjj")
     }
+    */
     /*
     {
         Text("Hello, World!")
@@ -112,6 +231,15 @@ struct ContentView: View {
         }
     }
  */
+}
+*/
+class ImageSaver: NSObject {
+    func writeToPhotoAlbum(image: UIImage) {
+        UIImageWriteToSavedPhotosAlbum(image, self, #selector(saveError), nil)
+    }
+    @objc func saveError(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+        print("Save finished!")
+    }
 }
 
 struct ContentView_Previews: PreviewProvider {

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		88202F96264B8E0C0031A46D /* ImageSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88202F95264B8E0C0031A46D /* ImageSaver.swift */; };
 		88BBAA6626459E61008A3AD4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BBAA6526459E61008A3AD4 /* AppDelegate.swift */; };
 		88BBAA6826459E61008A3AD4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BBAA6726459E61008A3AD4 /* SceneDelegate.swift */; };
 		88BBAA6A26459E61008A3AD4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BBAA6926459E61008A3AD4 /* ContentView.swift */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		88202F95264B8E0C0031A46D /* ImageSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSaver.swift; sourceTree = "<group>"; };
 		88BBAA6226459E61008A3AD4 /* InstaFilter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InstaFilter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		88BBAA6526459E61008A3AD4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		88BBAA6726459E61008A3AD4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -61,6 +63,7 @@
 				88BBAA6526459E61008A3AD4 /* AppDelegate.swift */,
 				88BBAA6726459E61008A3AD4 /* SceneDelegate.swift */,
 				88BBAA6926459E61008A3AD4 /* ContentView.swift */,
+				88202F95264B8E0C0031A46D /* ImageSaver.swift */,
 				88BBAA792646014C008A3AD4 /* ImagePicker.swift */,
 				88BBAA6B26459E62008A3AD4 /* Assets.xcassets */,
 				88BBAA7026459E62008A3AD4 /* LaunchScreen.storyboard */,
@@ -150,6 +153,7 @@
 			files = (
 				88BBAA6626459E61008A3AD4 /* AppDelegate.swift in Sources */,
 				88BBAA7A2646014C008A3AD4 /* ImagePicker.swift in Sources */,
+				88202F96264B8E0C0031A46D /* ImageSaver.swift in Sources */,
 				88BBAA6826459E61008A3AD4 /* SceneDelegate.swift in Sources */,
 				88BBAA6A26459E61008A3AD4 /* ContentView.swift in Sources */,
 			);

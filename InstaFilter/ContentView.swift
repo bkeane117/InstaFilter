@@ -13,6 +13,8 @@ import CoreImage.CIFilterBuiltins
 struct ContentView: View {
     @State private var image: Image?
     @State private var filterIntensity = 0.5
+    @State private var filterRadius = 0.5
+    @State private var filterInputScale = 0.5
     
     @State private var inputImage: UIImage?
     @State private var showingImagePicker = false
@@ -26,6 +28,10 @@ struct ContentView: View {
     @State private var noImageSelected = false
     @State private var filterSelection = ""
     
+    @State private var showIntensitySlider = false
+    @State private var showRadiusSlider = false
+    @State private var showInputScaleSlider = false
+    
     var body: some View {
         let intensity = Binding<Double>(
             get: {
@@ -36,6 +42,27 @@ struct ContentView: View {
                 self.applyProcessing()
             }
         )
+        
+        let radius = Binding<Double>(
+            get: {
+                self.filterRadius
+            },
+            set: {
+                self.filterRadius = $0
+                self.applyProcessing()
+            }
+        )
+        
+        let inputScale = Binding<Double>(
+            get: {
+                self.filterInputScale
+            },
+            set: {
+                self.filterInputScale = $0
+                self.applyProcessing()
+            }
+        )
+        
         return NavigationView {
             VStack {
                 ZStack {
@@ -56,11 +83,26 @@ struct ContentView: View {
                     // select an image
                     self.showingImagePicker = true
                 }
-                
-                HStack {
-                    Text("Intensity")
-                    Slider(value: intensity)
-                }.padding(.vertical)
+                VStack {
+                    if showIntensitySlider {
+                        HStack {
+                            Text("Intensity")
+                            Slider(value: intensity)
+                        }.padding(.vertical)
+                    }
+                    if showRadiusSlider {
+                        HStack {
+                            Text("Radius")
+                            Slider(value: radius)
+                        }.padding(.vertical)
+                    }
+                    if showInputScaleSlider {
+                        HStack {
+                            Text("Input Scale")
+                            Slider(value: inputScale)
+                        }.padding(.vertical)
+                    }
+                }
                 
                 HStack {
                     Button("Change Filter\(filterSelection)") {
@@ -139,9 +181,21 @@ struct ContentView: View {
     }
     func applyProcessing() {
         let inputKeys = currentFilter.inputKeys
-        if inputKeys.contains(kCIInputIntensityKey) { currentFilter.setValue(filterIntensity, forKey: kCIInputIntensityKey) }
-        if inputKeys.contains(kCIInputRadiusKey) { currentFilter.setValue(filterIntensity * 200, forKey: kCIInputRadiusKey) }
-        if inputKeys.contains(kCIInputScaleKey) { currentFilter.setValue(filterIntensity * 10, forKey:kCIInputScaleKey)}
+        if inputKeys.contains(kCIInputIntensityKey) {
+            showIntensitySlider = true
+            currentFilter.setValue(filterIntensity, forKey: kCIInputIntensityKey) } else {
+                showIntensitySlider = false
+            }
+        if inputKeys.contains(kCIInputRadiusKey) {
+            showRadiusSlider = true
+            currentFilter.setValue(filterRadius * 200, forKey: kCIInputRadiusKey) } else {
+                showRadiusSlider = false
+            }
+        if inputKeys.contains(kCIInputScaleKey) {
+            showInputScaleSlider = true
+            currentFilter.setValue(filterInputScale * 10, forKey:kCIInputScaleKey)} else {
+                showInputScaleSlider = false
+            }
         
         guard let outputImage = currentFilter.outputImage else { return }
         
